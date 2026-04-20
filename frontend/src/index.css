@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: hsl(60, 17%, 98%);
+  --color-foreground: hsl(0, 0%, 4%);
+  --color-card: hsl(0, 0%, 100%);
+  --color-card-foreground: hsl(229, 35%, 16%);
+  --color-primary: hsl(15, 87%, 55%);
+  --color-secondary: hsl(175, 84%, 32%);
+  --color-muted: hsl(60, 11%, 95%);
+  --color-muted-foreground: hsl(220, 9%, 46%);
+  --color-accent: hsl(15, 100%, 96%);
+  --color-border: hsl(43, 13%, 90%);
+
+  --font-sans: "Inter", sans-serif;
+  --font-heading: "Plus Jakarta Sans", sans-serif;
+}
+
+/* Base styles */
+*,
+*::before,
+*::after {
+  border-color: hsl(43, 13%, 90%);
+}
+
+body {
+  background-color: hsl(60, 17%, 98%);
+  color: hsl(0, 0%, 4%);
+  font-family: var(--font-sans);
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
