@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import axios from "axios";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -52,12 +53,13 @@ const Register = () => {
           );
 
           localStorage.setItem("token", res.data.token);
-
-          alert("Registration Successful!");
+          localStorage.setItem("userId", res.data._id);
 
           console.log(res.data);
 
           setLoading(false);
+
+          navigate("/dashboard", { replace: true });
         } catch (err) {
           setLoading(false);
 

@@ -34,6 +34,10 @@ export const registerUser = async (req, res) => {
 
     res.status(201).json({
       _id: user._id,
+      name: user.name,
+      email: user.email,
+      bloodGroup: user.bloodGroup,
+      isDonor: user.isDonor,
       token: generateToken(user._id),
     });
   } catch (error) {
@@ -51,6 +55,10 @@ export const loginUser = async (req, res) => {
     if (user && (await bcrypt.compare(password, user.password))) {
       res.json({
         _id: user._id,
+        name: user.name,
+        email: user.email,
+        bloodGroup: user.bloodGroup,
+        isDonor: user.isDonor,
         token: generateToken(user._id),
       });
     } else {
