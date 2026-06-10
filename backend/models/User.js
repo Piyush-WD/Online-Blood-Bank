@@ -4,10 +4,15 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
+    // =========================
+    // Basic Information
+    // =========================
+
     name: {
       type: String,
       required: true,
       trim: true,
+      minlength: 2,
     },
 
     email: {
@@ -15,11 +20,19 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       lowercase: true,
+      trim: true,
     },
 
     password: {
       type: String,
       required: true,
+    },
+
+    phone: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
     },
 
     bloodGroup: {
@@ -28,55 +41,55 @@ const userSchema = new mongoose.Schema(
       enum: ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"],
     },
 
-    // 📍 Location (IMPORTANT)
+    // =========================
+    // Location
+    // =========================
+
+    city: {
+      type: String,
+      trim: true,
+    },
+
     location: {
       type: {
         type: String,
         enum: ["Point"],
         default: "Point",
       },
+
       coordinates: {
         type: [Number], // [longitude, latitude]
         required: true,
       },
     },
 
-    city: {
-      type: String,
+    // =========================
+    // Donor Information
+    // =========================
+
+    isDonor: {
+      type: Boolean,
+      default: false,
     },
 
-    // 🧠 Role (set after registration)
-    role: {
-      type: String,
-      enum: ["donor", "receiver"],
-      default: null,
-    },
-
-    // 🩸 Donor-specific fields
     isAvailable: {
       type: Boolean,
-      default: true,
+      default: false,
     },
 
     lastDonationDate: {
       type: Date,
-    },
-
-    // 📞 Contact
-    phone: {
-      type: String,
-    },
-
-    // ⭐ Optional future feature
-    rating: {
-      type: Number,
-      default: 0,
+      default: null,
     },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+  },
 );
 
-// 🔥 GEO INDEX (VERY IMPORTANT)
-userSchema.index({ location: "2dsphere" });
+// Geospatial Index
+userSchema.index({
+  location: "2dsphere",
+});
 
 export default mongoose.model("User", userSchema);
