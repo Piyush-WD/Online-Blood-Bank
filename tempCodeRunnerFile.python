@@ -1,0 +1,33 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+import time
+from selenium.webdriver.common.alert import Alert
+
+driver = webdriver.Chrome()
+driver.get("http://localhost:5173/login")
+time.sleep(3)
+
+print(driver.title)
+print(driver.current_url)
+
+email = driver.find_element(By.NAME, "email")
+password = driver.find_element(By.NAME, "password")
+
+email.send_keys("gupta.piyush1005@gmail.com")
+password.send_keys("KA03ND0116")
+
+submit = driver.find_element(By.CSS_SELECTOR, "button[type='submit']")
+submit.click()
+
+alert = Alert(driver)
+alert.accept()   # Clicks OK
+
+
+import time
+
+driver = webdriver.Chrome()
+driver.get("http://localhost:5173/login")
+
+time.sleep(20)   # Keeps browser open for 30 seconds
+
+driver.quit()

@@ -3,14 +3,35 @@ import Landing from "./pages/LandingPage/Landing";
 import Register from "./pages/Register/Register";
 import Login from "./pages/Login/Login";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import LoadingPage from "./pages/LoadingPage/LoadingPage";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function App() {
+  const [serverReady, setServerReady] = useState(false);
+  useEffect(() => {
+    const checkServer = async () => {
+      try {
+        await axios.get("http://localhost:5000/health");
+
+        setServerReady(true);
+      } catch (err) {
+        setTimeout(checkServer, 3000);
+      }
+    };
+
+    checkServer();
+  }, []);
+  if (!serverReady) {
+    return <LoadingPage />;
+  }
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/loading" element={<LoadingPage />} />
     </Routes>
   );
 }
