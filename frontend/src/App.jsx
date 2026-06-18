@@ -6,13 +6,15 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import LoadingPage from "./pages/LoadingPage/LoadingPage";
 import { useEffect, useState } from "react";
 import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
+console.log("API URL:", API_URL); // add this
 
 function App() {
   const [serverReady, setServerReady] = useState(false);
   useEffect(() => {
     const checkServer = async () => {
       try {
-        await axios.get("http://localhost:5000/health");
+        await axios.get(`${API_URL}/health`);
 
         setServerReady(true);
       } catch (err) {
