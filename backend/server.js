@@ -12,7 +12,22 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        "https://online-blood-bank-three.vercel.app",
+        /\.vercel\.app$/, // allows all vercel preview URLs
+      ];
+      if (
+        !origin ||
+        allowedOrigins.some((o) =>
+          typeof o === "string" ? o === origin : o.test(origin),
+        )
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   }),
 );
