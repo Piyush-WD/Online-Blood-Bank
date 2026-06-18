@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -47,10 +48,7 @@ const Register = () => {
             },
           };
 
-          const res = await axios.post(
-            "http://localhost:5000/api/auth/register",
-            payload,
-          );
+          const res = await axios.post(`${API_URL}/api/auth/register`, payload);
 
           localStorage.setItem("token", res.data.token);
           localStorage.setItem("user", JSON.stringify(res.data));

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const FindBlood = () => {
   console.log("FindBlood rendered");
@@ -10,18 +11,15 @@ const FindBlood = () => {
   const handleSearch = () => {
     navigator.geolocation.getCurrentPosition(async (position) => {
       try {
-        const res = await axios.post(
-          "http://localhost:5000/api/users/find-nearby",
-          {
-            bloodGroup,
+        const res = await axios.post(`${API_URL}/api/users/find-nearby`, {
+          bloodGroup,
 
-            radius,
+          radius,
 
-            latitude: position.coords.latitude,
+          latitude: position.coords.latitude,
 
-            longitude: position.coords.longitude,
-          },
-        );
+          longitude: position.coords.longitude,
+        });
 
         setResults(res.data);
       } catch (err) {

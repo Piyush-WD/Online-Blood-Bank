@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const DonateBlood = () => {
   const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -12,14 +13,11 @@ const DonateBlood = () => {
 
   const updateStatus = async (donorStatus, availableStatus) => {
     try {
-      const res = await axios.put(
-        "http://localhost:5000/api/users/update-donor-status",
-        {
-          userId: storedUser._id,
-          isDonor: donorStatus,
-          isAvailable: availableStatus,
-        },
-      );
+      const res = await axios.put(`${API_URL}/api/users/update-donor-status`, {
+        userId: storedUser._id,
+        isDonor: donorStatus,
+        isAvailable: availableStatus,
+      });
 
       setIsDonor(res.data.isDonor);
       setIsAvailable(res.data.isAvailable);
