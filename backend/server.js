@@ -15,7 +15,8 @@ app.use(
     origin: function (origin, callback) {
       const allowedOrigins = [
         "https://online-blood-bank-three.vercel.app",
-        /\.vercel\.app$/, // allows all vercel preview URLs
+        /\.vercel\.app$/,
+        "https://online-blood-bank-7ioe.onrender.com", // 👈 add this
       ];
       if (
         !origin ||
