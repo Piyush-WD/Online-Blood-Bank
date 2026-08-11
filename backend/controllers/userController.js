@@ -5,6 +5,7 @@ export const findNearbyDonors = async (req, res) => {
     const { bloodGroup, latitude, longitude, radius } = req.body;
 
     const donors = await User.find({
+      _id: { $ne: req.user._id },
       bloodGroup,
       isDonor: true,
       isAvailable: true,
