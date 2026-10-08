@@ -1,13 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import FindBlood from "./components/FindBlood";
 import DonateBlood from "./components/DonateBlood";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("find");
 
+  const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
   const userName = user?.name || "User";
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/login", { replace: true });
+    }
+  }, [token, navigate]);
+
+  if (!token) {
+    return null;
+  }
 
   return (
     <>

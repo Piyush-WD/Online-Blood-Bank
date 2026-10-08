@@ -14,16 +14,12 @@ app.use(
   cors({
     origin: function (origin, callback) {
       const allowedOrigins = [
+        "http://localhost:5173",
         "https://online-blood-bank-three.vercel.app",
-        /\.vercel\.app$/,
-        "https://online-blood-bank-7ioe.onrender.com", // 👈 add this
+        "https://online-blood-bank-7ioe.onrender.com",
       ];
-      if (
-        !origin ||
-        allowedOrigins.some((o) =>
-          typeof o === "string" ? o === origin : o.test(origin),
-        )
-      ) {
+
+      if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));

@@ -1,5 +1,3 @@
-import React from "react";
-
 const LoadingScreen = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-red-50 via-white to-red-100 px-6">

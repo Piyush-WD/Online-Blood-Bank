@@ -13,11 +13,24 @@ const DonateBlood = () => {
 
   const updateStatus = async (donorStatus, availableStatus) => {
     try {
-      const res = await axios.put(`${API_URL}/api/users/update-donor-status`, {
-        userId: storedUser._id,
-        isDonor: donorStatus,
-        isAvailable: availableStatus,
-      });
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Please sign in to update your donor status.");
+        return;
+      }
+
+      const res = await axios.put(
+        `${API_URL}/api/users/update-donor-status`,
+        {
+          isDonor: donorStatus,
+          isAvailable: availableStatus,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
 
       setIsDonor(res.data.isDonor);
       setIsAvailable(res.data.isAvailable);

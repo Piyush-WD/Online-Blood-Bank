@@ -3,33 +3,64 @@ import axios from "axios";
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const FindBlood = () => {
-  console.log("FindBlood rendered");
   const [bloodGroup, setBloodGroup] = useState("");
   const [radius, setRadius] = useState(10);
   const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const handleSearch = () => {
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      try {
-        const res = await axios.post(`${API_URL}/api/users/find-nearby`, {
-          bloodGroup,
+    if (!bloodGroup) {
+      alert("Please select a blood group.");
+      return;
+    }
 
-          radius,
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Please sign in to search for donors.");
+      return;
+    }
 
-          latitude: position.coords.latitude,
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported.");
+      return;
+    }
 
-          longitude: position.coords.longitude,
-        });
+    setLoading(true);
 
-        setResults(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    });
-    const handleSearch = () => {
-      alert("Clicked");
-    };
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const res = await axios.post(
+            `${API_URL}/api/users/find-nearby`,
+            {
+              bloodGroup,
+              radius,
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            },
+          );
+
+          setResults(res.data);
+          setHasSearched(true);
+        } catch (err) {
+          alert(err.response?.data?.message || "Could not search for donors.");
+        } finally {
+          setLoading(false);
+        }
+      },
+      () => {
+        setLoading(false);
+        alert("Please allow location access to search nearby donors.");
+      },
+    );
   };
+
   return (
     <div className="max-w-3xl mx-auto py-10">
       <h2 className="text-3xl font-bold text-center">Find Blood Donors</h2>
@@ -39,8 +70,6 @@ const FindBlood = () => {
       </p>
 
       <div className="mt-10 grid md:grid-cols-2 gap-6">
-        {/* Blood Group */}
-
         <div>
           <label className="block mb-2 font-medium">Blood Group</label>
 
@@ -61,8 +90,6 @@ const FindBlood = () => {
           </select>
         </div>
 
-        {/* Radius */}
-
         <div>
           <label className="block mb-2 font-medium">Search Radius</label>
 
@@ -82,25 +109,32 @@ const FindBlood = () => {
       <div className="mt-8 flex justify-center">
         <button
           onClick={handleSearch}
-          className="px-8 py-3 bg-primary text-white rounded-xl shadow hover:opacity-90 transition"
+          disabled={loading}
+          className="px-8 py-3 bg-primary text-white rounded-xl shadow hover:opacity-90 transition disabled:opacity-70"
         >
-          Search Donors
+          {loading ? "Searching..." : "Search Donors"}
         </button>
       </div>
 
       <div className="mt-10 space-y-4">
-        {results.map((donor) => (
-          <div key={donor._id} className="rounded-xl border p-5 shadow-sm">
-            <h2 className="text-xl font-semibold">{donor.name}</h2>
+        {results.length === 0 && !loading ? (
+          <p className="text-center text-gray-400">
+            {hasSearched
+              ? "No available donors found nearby."
+              : "No donors to show yet. Search to see matches nearby."}
+          </p>
+        ) : (
+          results.map((donor) => (
+            <div key={donor._id} className="rounded-xl border p-5 shadow-sm">
+              <h2 className="text-xl font-semibold">{donor.name}</h2>
 
-            <p>🩸 {donor.bloodGroup}</p>
+              <p>🩸 {donor.bloodGroup}</p>
 
-            <p>📞 {donor.phone}</p>
-          </div>
-        ))}
+              <p>📞 {donor.phone}</p>
+            </div>
+          ))
+        )}
       </div>
-
-      <div className="mt-12">{/* Donor cards will appear here */}</div>
     </div>
   );
 };
